@@ -4,6 +4,8 @@ using Unity.Services.Authentication;
 using TMPro;
 using System;
 using Unity.Services.Relay.Models;
+using Unity.Netcode.Transports.UTP;
+using Unity.Netcode;
 
 public class RelayManager : MonoBehaviour
 {
@@ -46,8 +48,13 @@ public class RelayManager : MonoBehaviour
         };
         hostData.JoinCode = await Unity.Services.Relay.RelayService.Instance.GetJoinCodeAsync(hostData.AllocationID);
         Debug.Log("Allocation Complete" + hostData.AllocationID);
+
         Debug.LogWarning("Join Code:" + hostData.JoinCode);
         joinCodeText.text = hostData.JoinCode;
+
+        UnityTransport unityTransport = NetworkManager.Singleton.gameObject.GetComponent<UnityTransport>();
+        unityTransport.SetRelayServerData(hostData.Ipv4Address, hostData.port, hostData.AllocationIDBytes, hostData.Key, hostData.ConnectionData);
+        NetworkManager.Singleton.StartHost();
     }
 
     public async void OnJoinClick()
@@ -65,7 +72,9 @@ public class RelayManager : MonoBehaviour
             Key = joinAllocation.Key,
         };
         Debug.Log("Join Success" + joinData.AllocationID);
-        
+        UnityTransport unityTransport = NetworkManager.Singleton.gameObject.GetComponent<UnityTransport>();
+        unityTransport.SetRelayServerData(joinData.Ipv4Address, joinData.port,joinData.AllocationIDBytes, joinData.Key, joinData.ConnectionData,joinData.HostConnectionData);
+        NetworkManager.Singleton.StartClient();
     }
 }
 
