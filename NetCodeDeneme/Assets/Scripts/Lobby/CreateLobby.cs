@@ -10,6 +10,7 @@ using Unity.Services.Lobbies.Models;
 public class CreateLobby : MonoBehaviour
 {
     public TMP_InputField lobbyname;
+    public TMP_InputField lobbycode;
     public TMP_Dropdown maxplayers;
     public Toggle isLobbyPrivate;
 
@@ -23,16 +24,18 @@ public class CreateLobby : MonoBehaviour
         Lobby lobby = await LobbyService.Instance.CreateLobbyAsync(lobbyName, maxPlayers, options);
         DontDestroyOnLoad(this);
         Debug.Log("Create Lobby done!");
+        lobbycode.text = lobby.LobbyCode;
+        StartCoroutine(HeartbeatLobbyCoroutine(lobby.Id, 15f));
     }
 
-    void Start()
+    //Kapanmamasý için lobiyi pingliyoruz.
+    IEnumerator HeartbeatLobbyCoroutine(string lobbyId,float waitTimeSeconds)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        var delay = new WaitForSeconds(waitTimeSeconds);
+        while(true)
+        {
+            LobbyService.Instance.SendHeartbeatPingAsync(lobbyId);
+            yield return delay;
+        }
     }
 }

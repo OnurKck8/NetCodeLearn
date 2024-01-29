@@ -14,19 +14,13 @@ public class GetLobby : MonoBehaviour
         await AuthenticationService.Instance.SignInAnonymouslyAsync();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public async void GetLobbiesTest()
     {
         try
         {
             QueryLobbiesOptions options = new();
             Debug.LogWarning("QuarryLobiesTest");
-            options.Count = 25;
+            options.Count = 25;//Kaç adet lobi getirmek istiyorsun.
 
             //Filter for open lobbies only
             options.Filters = new List<QueryFilter>()
@@ -35,7 +29,7 @@ public class GetLobby : MonoBehaviour
                 (
                     field:QueryFilter.FieldOptions.AvailableSlots,
                     op:QueryFilter.OpOptions.GT,
-                    value:"0"
+                    value:"0"//0'dan büyük olan boþ lobileri getir
                 )
             };
 
@@ -44,8 +38,8 @@ public class GetLobby : MonoBehaviour
             {
                 new QueryOrder
                 (
-                    asc:false,
-                    field:QueryOrder.FieldOptions.AvailableSlots)
+                    asc:false,//Ýlk açýlan lobiler için "false", son açýlan lobiler için "true
+                    field:QueryOrder.FieldOptions.Created)
             };
 
             QueryResponse lobbies = await Lobbies.Instance.QueryLobbiesAsync(options);
@@ -53,8 +47,11 @@ public class GetLobby : MonoBehaviour
 
             foreach (Lobby bulunanLobby in lobbies.Results)
             {
-                Debug.Log("Lobby Ýsmi:" + bulunanLobby.Name+"\n" + "Lobby Olusturlma Vakti:" + bulunanLobby.Created);
+                Debug.Log("Lobby Ýsmi:" + bulunanLobby.Name+"\n" + "Lobby Olusturlma Vakti:" + bulunanLobby.Created+
+                    "Lobby Code:" + bulunanLobby.LobbyCode+
+                    "Lobby ID:" + bulunanLobby.Id);
             }
+            GetComponent<JoinLobby>().JoinLobbyWithLobbyId(lobbies.Results[0].Id);
         }
         catch (LobbyServiceException e)
         {
