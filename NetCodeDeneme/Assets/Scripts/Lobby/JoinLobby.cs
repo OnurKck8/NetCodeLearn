@@ -29,8 +29,22 @@ public class JoinLobby : MonoBehaviour
         try
         {
             Lobby lobby=await LobbyService.Instance.JoinLobbyByCodeAsync(lobbyId);
-            Debug.Log("Joined Lobby With Code:" + lobbyId);
-            Debug.LogWarning("Lobby Code: " + lobby.Id);
+            Debug.Log("Joined Lobby With ID:" + lobbyId);
+            Debug.LogWarning("Lobby Code: " + lobby.LobbyCode);
+        }
+        catch (LobbyServiceException e)
+        {
+            Debug.Log(e);
+        }
+    }
+
+    public async void QuickJoinMethod()
+    {
+        try
+        {
+            Lobby lobby = await LobbyService.Instance.QuickJoinLobbyAsync();
+            Debug.Log("Joined Lobby With Quick Join:" + lobby.Id);
+            Debug.LogWarning("Lobby Code: " + lobby.LobbyCode);
         }
         catch (LobbyServiceException e)
         {
