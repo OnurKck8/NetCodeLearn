@@ -41,7 +41,7 @@ public class RelayManager : MonoBehaviour
         hostData = new RelayHostData()
         {
             Ipv4Address = allocation.RelayServer.IpV4,
-            port = (ushort)allocation.RelayServer.Port,
+            Port = (ushort)allocation.RelayServer.Port,
             AllocationID = allocation.AllocationId,
             AllocationIDBytes = allocation.ConnectionData,
             Key = allocation.Key,
@@ -53,7 +53,7 @@ public class RelayManager : MonoBehaviour
         joinCodeText.text = hostData.JoinCode;
 
         UnityTransport unityTransport = NetworkManager.Singleton.gameObject.GetComponent<UnityTransport>();
-        unityTransport.SetRelayServerData(hostData.Ipv4Address, hostData.port, hostData.AllocationIDBytes, hostData.Key, hostData.ConnectionData);
+        unityTransport.SetRelayServerData(hostData.Ipv4Address, hostData.Port, hostData.AllocationIDBytes, hostData.Key, hostData.ConnectionData);
         NetworkManager.Singleton.StartHost();
     }
 
@@ -64,7 +64,7 @@ public class RelayManager : MonoBehaviour
         joinData = new RelayJoinData()
         {
             Ipv4Address = joinAllocation.RelayServer.IpV4,
-            port = (ushort)joinAllocation.RelayServer.Port,
+            Port = (ushort)joinAllocation.RelayServer.Port,
             AllocationID = joinAllocation.AllocationId,
             AllocationIDBytes = joinAllocation.ConnectionData,
             ConnectionData=joinAllocation.ConnectionData,
@@ -73,7 +73,7 @@ public class RelayManager : MonoBehaviour
         };
         Debug.Log("Join Success" + joinData.AllocationID);
         UnityTransport unityTransport = NetworkManager.Singleton.gameObject.GetComponent<UnityTransport>();
-        unityTransport.SetRelayServerData(joinData.Ipv4Address, joinData.port,joinData.AllocationIDBytes, joinData.Key, joinData.ConnectionData,joinData.HostConnectionData);
+        unityTransport.SetRelayServerData(joinData.Ipv4Address, joinData.Port,joinData.AllocationIDBytes, joinData.Key, joinData.ConnectionData,joinData.HostConnectionData);
         NetworkManager.Singleton.StartClient();
     }
 }
@@ -82,7 +82,7 @@ public struct RelayHostData
 {
     public string JoinCode;
     public string Ipv4Address;
-    public ushort port;
+    public ushort Port;
     public Guid AllocationID;
     public byte[] AllocationIDBytes;
     public byte[] ConnectionData;
@@ -92,7 +92,7 @@ public struct RelayHostData
 public struct RelayJoinData
 {  
     public string Ipv4Address;
-    public ushort port;
+    public ushort Port;
     public Guid AllocationID;
     public byte[] AllocationIDBytes;
     public byte[] ConnectionData;
