@@ -5,9 +5,14 @@ using Unity.Services.Core;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
+using TMPro;
+using UnityEngine.UI;
 
 public class GetLobby : MonoBehaviour
 {
+    public GameObject buttonContainer;
+    public GameObject buttonPrefab;
+
     async void Start()
     {
         await UnityServices.InitializeAsync();//Yazmazsan çalýþmaz
@@ -16,6 +21,8 @@ public class GetLobby : MonoBehaviour
 
     public async void GetLobbiesTest()
     {
+        ClearContainer();
+
         try
         {
             QueryLobbiesOptions options = new();
@@ -33,6 +40,7 @@ public class GetLobby : MonoBehaviour
                 )
             };
 
+            /*
             options.Filters = new List<QueryFilter>()
             {
                 new QueryFilter
@@ -42,6 +50,7 @@ public class GetLobby : MonoBehaviour
                     value:"Conquest"
                 )
             };
+            */
 
             //Order by newest lobbies first
             options.Order = new List<QueryOrder>()
@@ -58,12 +67,41 @@ public class GetLobby : MonoBehaviour
             foreach (Lobby bulunanLobby in lobbies.Results)
             {
                 LobbyStatic.LogLobby(bulunanLobby);
+                CreateLobbyButton(bulunanLobby);
             }
-            GetComponent<JoinLobby>().JoinLobbyWithLobbyId(lobbies.Results[0].Id);
+            //GetComponent<JoinLobby>().JoinLobbyWithLobbyId(lobbies.Results[0].Id);
         }
         catch (LobbyServiceException e)
         {
             Debug.Log(e);
         }
+    }
+
+    private void CreateLobbyButton(Lobby lobby)
+    {
+        var button = Instantiate(buttonPrefab, Vector3.zero, Quaternion.identity);
+        button.name = lobby.Name + "_Button";
+        button.GetComponentInChildren<TextMeshProUGUI>().text = lobby.Name;
+        var rectTransform = button.GetComponent<RectTransform>();
+        rectTransform.SetParent(buttonContainer.transform);
+        button.GetComponent<Button>().onClick.AddListener(delegate () { Lobby_OnClick(lobby); });
+    }
+
+    public void Lobby_OnClick(Lobby lobby)
+    {
+        Debug.Log("Clicked Lobby"+lobby.Name);
+        GetComponent<JoinLobby>().JoinLobbyWithLobbyId(lobby.Id);
+    }
+
+    private void ClearContainer()
+    {
+        if(buttonContainer is not null && buttonContainer.transform.childCount>0)
+        {
+            foreach (Transform item in buttonContainer.transform)
+            {
+                Destroy(item.gameObject);
+            }
+        }
+        
     }
 }
