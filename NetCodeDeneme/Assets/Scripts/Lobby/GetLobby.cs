@@ -33,6 +33,16 @@ public class GetLobby : MonoBehaviour
                 )
             };
 
+            options.Filters = new List<QueryFilter>()
+            {
+                new QueryFilter
+                (
+                    field:QueryFilter.FieldOptions.S1,
+                    op:QueryFilter.OpOptions.EQ,
+                    value:"Conquest"
+                )
+            };
+
             //Order by newest lobbies first
             options.Order = new List<QueryOrder>()
             {
@@ -47,9 +57,7 @@ public class GetLobby : MonoBehaviour
 
             foreach (Lobby bulunanLobby in lobbies.Results)
             {
-                Debug.Log("Lobby Ýsmi:" + bulunanLobby.Name+"\n" + "Lobby Olusturlma Vakti:" + bulunanLobby.Created+
-                    "Lobby Code:" + bulunanLobby.LobbyCode+
-                    "Lobby ID:" + bulunanLobby.Id);
+                LobbyStatic.LogLobby(bulunanLobby);
             }
             GetComponent<JoinLobby>().JoinLobbyWithLobbyId(lobbies.Results[0].Id);
         }

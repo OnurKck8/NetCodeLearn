@@ -13,4 +13,8 @@ public static class LobbyStatic
             Debug.Log("Plyers Level =" + player.Data["PLayerLevel"].Value);
         }
     }
+    public static void LogLobby(Lobby lobby)
+    {
+        Debug.Log("Lobby ID =" + lobby.Id + "\n" + "GameMode=" + lobby.Data["GameMode"].Value);
+    }
 }
