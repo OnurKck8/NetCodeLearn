@@ -5,6 +5,7 @@ using TMPro;
 using Unity.Services.Lobbies;
 using System;
 using Unity.Services.Lobbies.Models;
+using Unity.Services.Authentication;
 
 public class JoinLobby : MonoBehaviour
 {
@@ -15,8 +16,16 @@ public class JoinLobby : MonoBehaviour
         var code = inputField.text;
         try
         {
-            await LobbyService.Instance.JoinLobbyByCodeAsync(code);
+            JoinLobbyByCodeOptions options = new JoinLobbyByCodeOptions();
+            options.Player = new Player(AuthenticationService.Instance.PlayerId);
+            options.Player.Data = new Dictionary<string, PlayerDataObject>()
+            {
+              {"PLayerLevel",new PlayerDataObject(PlayerDataObject.VisibilityOptions.Public,"8")}
+            };
+
+            Lobby lobby = await LobbyService.Instance.JoinLobbyByCodeAsync(code,options);
             Debug.Log("Joined Lobby With Code:" + code);
+            LobbyStatic.LogPlayersInLobby(lobby);
         }
         catch(LobbyServiceException e)
         {

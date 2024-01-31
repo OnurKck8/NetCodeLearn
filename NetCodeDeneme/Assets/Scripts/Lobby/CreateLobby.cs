@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using Unity.Services.Lobbies;
 using System;
 using Unity.Services.Lobbies.Models;
+using Unity.Services.Authentication;
 
 public class CreateLobby : MonoBehaviour
 {
@@ -21,9 +22,16 @@ public class CreateLobby : MonoBehaviour
         CreateLobbyOptions options = new CreateLobbyOptions();
         options.IsPrivate = isLobbyPrivate.isOn;
 
+        options.Player = new Player(AuthenticationService.Instance.PlayerId);
+        options.Player.Data = new Dictionary<string, PlayerDataObject>()
+        {
+            {"PLayerLevel",new PlayerDataObject(PlayerDataObject.VisibilityOptions.Public,"5")}
+        };
+
         Lobby lobby = await LobbyService.Instance.CreateLobbyAsync(lobbyName, maxPlayers, options);
         DontDestroyOnLoad(this);
         Debug.Log("Create Lobby done!");
+        LobbyStatic.LogPlayersInLobby(lobby);
         lobbycode.text = lobby.LobbyCode;
         StartCoroutine(HeartbeatLobbyCoroutine(lobby.Id, 15f));
     }
@@ -38,4 +46,6 @@ public class CreateLobby : MonoBehaviour
             yield return delay;
         }
     }
+
+   
 }
