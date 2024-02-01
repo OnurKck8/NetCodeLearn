@@ -36,12 +36,16 @@ public class CreateLobby : MonoBehaviour
             {"GameMode",new DataObject(DataObject.VisibilityOptions.Public,gamemode.options[gamemode.value].text,DataObject.IndexOptions.S1)}
         };
         Lobby lobby = await LobbyService.Instance.CreateLobbyAsync(lobbyName, maxPlayers, options);
+
         DontDestroyOnLoad(this);
+        GetComponent<CurrentLobby>().currentLobby = lobby;
+
         Debug.Log("Create Lobby done!");
         LobbyStatic.LogLobby(lobby);
         LobbyStatic.LogPlayersInLobby(lobby);
         lobbycode.text = lobby.LobbyCode;
         StartCoroutine(HeartbeatLobbyCoroutine(lobby.Id, 15f));
+        LobbyStatic.LoadLobbyRoom();
     }
 
     //Kapanmamasý için lobiyi pingliyoruz.

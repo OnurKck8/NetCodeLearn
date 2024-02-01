@@ -2469,6 +2469,7 @@ GameObject:
   - component: {fileID: 1014556138}
   - component: {fileID: 1014556140}
   - component: {fileID: 1014556141}
+  - component: {fileID: 1014556142}
   m_Layer: 0
   m_Name: LobbyManager
   m_TagString: Untagged
@@ -2535,6 +2536,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputField: {fileID: 1593421892}
+--- !u!114 &1014556142
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1014556137}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b81d6e92a347e24fb61397ee428bde0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1034174915
 GameObject:
   m_ObjectHideFlags: 0
