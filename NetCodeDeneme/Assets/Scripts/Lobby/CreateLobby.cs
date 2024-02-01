@@ -43,6 +43,7 @@ public class CreateLobby : MonoBehaviour
         Debug.Log("Create Lobby done!");
         LobbyStatic.LogLobby(lobby);
         LobbyStatic.LogPlayersInLobby(lobby);
+
         lobbycode.text = lobby.LobbyCode;
         StartCoroutine(HeartbeatLobbyCoroutine(lobby.Id, 15f));
         LobbyStatic.LoadLobbyRoom();

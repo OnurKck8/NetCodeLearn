@@ -4,12 +4,15 @@ using UnityEngine;
 using TMPro;
 using Unity.Services.Lobbies.Models;
 using Unity.Services.Lobbies;
+using Unity.Services.Authentication;
 
 public class PopulateUI : MonoBehaviour
 {
     public TextMeshProUGUI lobbyCode;
     public TextMeshProUGUI lobbyName;
     public TextMeshProUGUI gameMode;
+    public TMP_InputField newName;
+    public TMP_InputField newPlayerLevel;
 
     public GameObject playerInfoContainer;
     public GameObject playerInfoPrefab;
@@ -17,6 +20,7 @@ public class PopulateUI : MonoBehaviour
     private CurrentLobby _currentLobby;
 
     public string lobbyId;
+
     void Start()
     {
         _currentLobby = GameObject.Find("LobbyManager").GetComponent<CurrentLobby>();
@@ -63,5 +67,43 @@ public class PopulateUI : MonoBehaviour
     {
         _currentLobby.currentLobby = await LobbyService.Instance.GetLobbyAsync(lobbyId);
         PopulateUIElements();
+    }
+
+    //Button Events
+    public async void ChangeNameButton()
+    {
+        var newLobbyName = newName.text;
+
+        try
+        {
+            UpdateLobbyOptions options = new UpdateLobbyOptions();
+            options.Name = newLobbyName;
+            _currentLobby.currentLobby= await Lobbies.Instance.UpdateLobbyAsync(lobbyId, options);
+        }
+        catch (LobbyServiceException e)
+        {
+            Debug.Log(e);
+        }
+    }
+
+    public async void ChangePlayerNameButton()
+    {
+        var PlayerLevel = newPlayerLevel.text;
+
+        try
+        {
+            UpdatePlayerOptions options = new UpdatePlayerOptions();
+
+            options.Data = new Dictionary<string, PlayerDataObject>()
+            {
+              {"PLayerLevel",new PlayerDataObject(PlayerDataObject.VisibilityOptions.Public,PlayerLevel)}
+            };
+
+            await LobbyService.Instance.UpdatePlayerAsync(lobbyId, AuthenticationService.Instance.PlayerId, options);
+        }
+        catch (LobbyServiceException e)
+        {
+            Debug.Log(e);
+        }
     }
 }
