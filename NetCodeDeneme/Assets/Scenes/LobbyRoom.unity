@@ -674,6 +674,8 @@ MonoBehaviour:
   lobbyCode: {fileID: 137937407}
   lobbyName: {fileID: 656020198}
   gameMode: {fileID: 2014593745}
+  playerInfoContainer: {fileID: 1810694856}
+  playerInfoPrefab: {fileID: 238311589245701502, guid: cc25dd91155488f44b1ee16f8e499e71, type: 3}
 --- !u!4 &1726146765
 Transform:
   m_ObjectHideFlags: 0
